@@ -11,7 +11,7 @@ jobs:
       DB_HOST: 127.0.0.1
       DB_PORT: 3306
       DB_USER: root
-      DB_PASSWORD: 1234
+      DB_PASSWORD: 20153681
       DB_DATABASE: oz_django
     steps:
       - name: Check out the codes
@@ -23,11 +23,11 @@ jobs:
         with:
           python-version: 3.12
 
-  #    - name: Set timezone to KST (TODO)
-
-
-
- #     - name: Start Mysql
+      - name: Start Mysql
+        run: |
+            sudo systemctl start mysql
+            mysql -e "use mysql; FLUSH PRIVILEGES; ALTER USER '${{ env.DB_USER }}'@'localhost' IDENTIFIED BY '${{ env.DB_PASSWORD }}';" -uroot -proot
+            mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
 
       - name: Install Poetry
@@ -50,3 +50,8 @@ jobs:
       - name: Run Mypy
         run: |
           poetry run mypy .
+
+      - name: Test python project
+        run: |
+          poetry run python manage.py test
+          poetry run coverage report -m
