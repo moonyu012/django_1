@@ -1,3 +1,5 @@
+import json
+
 from django.db import IntegrityError
 from django.test import TestCase
 
@@ -71,3 +73,17 @@ class TestLikeService(TestCase):
         # Then
         with self.assertRaises(Like.DoesNotExist):
             Like.objects.get(id=like.id)
+
+# class TestLikeRouter(TestCase):
+#     def test_create_like(self) -> None:
+#         user = User.objects.create(name="test")
+#         article = Article.objects.create(title="test article")
+#         like_request = {
+#             "user_id": user.id,
+#             "article_id": article.id,
+#         }
+#
+#         response = self.client.post("/api/v1/like", json.dumps(like_request), content_type="application/json")
+#
+#         self.assertEqual(201, response.status_code)
+#         self.assertEqual(1, Like.objects.count())
